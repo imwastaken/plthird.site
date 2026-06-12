@@ -8,7 +8,6 @@
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
-
   ttq.load('D8M8DT3C77U56UIVB5NG');
   ttq.page();
 }(window, document, 'ttq');
@@ -162,6 +161,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         
         // Функция перехода в бота
         function goToBot() {
+            // 1. ОТПРАВЛЯЕМ СОБЫТИЕ В TIKTOK ПЕРЕД ПЕРЕХОДОМ
+            if (typeof ttq !== 'undefined') {
+                ttq.track('Application Approval');
+            }
+
             // Очищаем юзернейм от символа @ на случай, если он был добавлен
             const cleanUsername = BOT_USERNAME.replace('@', '');
 
@@ -169,13 +173,16 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             const tgDeepLink = `tg://resolve?domain=${cleanUsername}`;
             const webLink = `https://t.me/${cleanUsername}`;
 
-            // Пытаемся открыть глубокую ссылку (сразу в приложение ТГ)
-            window.location.href = tgDeepLink;
-
-            // Фолбэк (fallback) на случай, если приложение не установлено или браузер блокирует deep link
+            // 2. ДЕЛАЕМ ЗАДЕРЖКУ (250мс), ЧТОБЫ ПИКСЕЛЬ УСПЕЛ ОТСТУЧАТЬ ДО РЕДИРЕКТА
             setTimeout(() => {
-                window.location.href = webLink;
-            }, 500);
+                // Пытаемся открыть глубокую ссылку (сразу в приложение ТГ)
+                window.location.href = tgDeepLink;
+
+                // Фолбэк (fallback) на случай, если приложение не установлено или браузер блокирует deep link
+                setTimeout(() => {
+                    window.location.href = webLink;
+                }, 500);
+            }, 250);
         }
 
         // Логика модального окна (Политики конфиденциальности)
