@@ -8,21 +8,9 @@
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
+
   ttq.load('D8M8DT3C77U56UIVB5NG');
   ttq.page();
-  
-  // ШАГ 1 ВОРОНКИ: Отправляем ViewContent при загрузке страницы
-  ttq.track('ViewContent', {
-    "contents": [
-        {
-            "content_id": "tg_bot_link", 
-            "content_type": "product",
-            "content_name": "telegram_bot" 
-        }
-    ],
-    "value": 1.0, 
-    "currency": "USD" 
-  });
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
@@ -129,10 +117,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         </div>
     </div>
 
-    <!-- Модальное окно Политики конфиденциальности -->
+    <!-- Модальное окно Политики конфиденциальности (Светлая тема) -->
     <div id="privacy-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex-col justify-end sm:justify-center p-4 backdrop-blur-sm">
         <div class="bg-tg-card rounded-2xl p-6 w-full max-w-md mx-auto max-h-[80vh] flex flex-col relative modal-enter shadow-2xl" id="modal-content">
             
+            <!-- Кнопка закрытия -->
             <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -168,43 +157,35 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     </div>
 
     <script>
-        const BOT_USERNAME = "@hilton_com67bot";
+        // ВАЖНО: Вставьте сюда юзернейм вашего бота (можно с @ или без)
+        const BOT_USERNAME = "@hilton_com67bot"; // <-- ИЗМЕНИТЬ НА СВОЙ!
         
+        // Функция перехода в бота
         function goToBot() {
-            // ШАГ 2 ВОРОНКИ: Конверсия (отправка CompleteRegistration перед редиректом)
-            if (typeof ttq !== 'undefined') {
-                ttq.track('CompleteRegistration', {
-                    "contents": [
-                        {
-                            "content_id": "tg_bot_link", 
-                            "content_type": "product", 
-                            "content_name": "telegram_bot" 
-                        }
-                    ],
-                    "value": 1.0, 
-                    "currency": "USD" 
-                });
-            }
-
+            // Очищаем юзернейм от символа @ на случай, если он был добавлен
             const cleanUsername = BOT_USERNAME.replace('@', '');
+
+            // Формируем ссылки
             const tgDeepLink = `tg://resolve?domain=${cleanUsername}`;
             const webLink = `https://t.me/${cleanUsername}`;
 
-            // Задержка 250мс для успешной отправки пакета пикселя
+            // Пытаемся открыть глубокую ссылку (сразу в приложение ТГ)
+            window.location.href = tgDeepLink;
+
+            // Фолбэк (fallback) на случай, если приложение не установлено или браузер блокирует deep link
             setTimeout(() => {
-                window.location.href = tgDeepLink;
-                setTimeout(() => {
-                    window.location.href = webLink;
-                }, 500);
-            }, 250);
+                window.location.href = webLink;
+            }, 500);
         }
 
+        // Логика модального окна (Политики конфиденциальности)
         const modal = document.getElementById('privacy-modal');
         const modalContent = document.getElementById('modal-content');
 
         function openModal() {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            // Небольшая задержка для срабатывания CSS transition
             setTimeout(() => {
                 modalContent.classList.add('modal-enter-active');
             }, 10);
@@ -215,15 +196,17 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-            }, 300);
+            }, 300); // время совпадает с transition в CSS
         }
 
+        // Закрытие модалки при клике вне ее области
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 closeModal();
             }
         });
 
+        // Установка текущего года в футере
         const now = new Date();
         document.getElementById('current-year').textContent = now.getFullYear();
     </script>
