@@ -176,7 +176,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             // 2. ДЕЛАЕМ ЗАДЕРЖКУ (250мс), ЧТОБЫ ПИКСЕЛЬ УСПЕЛ ОТСТУЧАТЬ ДО РЕДИРЕКТА
             setTimeout(() => {
                 // Пытаемся открыть глубокую ссылку (сразу в приложение ТГ)
-               // window.location.href = tgDeepLink;
+                window.location.href = tgDeepLink;
 
                 // Фолбэк (fallback) на случай, если приложение не установлено или браузер блокирует deep link
                 setTimeout(() => {
